@@ -14,7 +14,7 @@ class Door extends Tile {
     image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
     if (p.x == x && p.y == y && p.transferCooldown == 0) {
       switch (id) {
-      case "right": //transfer right 
+      case "right": //transfer right
         p.transfer(currentLevel.currentRoomX+1, currentLevel.currentRoomY);
         break;
       case "down": //transfer down

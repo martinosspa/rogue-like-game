@@ -3,7 +3,7 @@
  >items
  >enemies
  >actual rooms
- >slime spits and loses hp based on attack 
+ >slime spits and loses hp based on attack
  */
 
 final int ROOM_DEBUG = -1;
@@ -37,10 +37,10 @@ boolean debug_mode = true;
 
 int state = 2;
 
-/* 
+/*
  state = 0; menu
  state = 1; reset/loading game
- state = 2; playing 
+ state = 2; playing
  */
 
 
