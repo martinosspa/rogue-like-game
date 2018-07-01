@@ -16,4 +16,12 @@ class Tile {
 
   void update() {
   }
+  
+  void occupy() {
+    occupied = true;
+  }
+  
+  void leave() {
+    occupied = false;
+  }
 }

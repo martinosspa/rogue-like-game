@@ -4,8 +4,6 @@ class Player extends Entity {
   int changeX = 0;
   int changeY = 0;
   boolean up, right, down, left;
-  float health, maxHealth;
-  boolean dead = false;
   Room currentRoom;
   int transferCooldownMax;
   int transferCooldown;
@@ -13,9 +11,8 @@ class Player extends Entity {
   PImage image;
   float base_damage = 100;
   float[] damage_distribution = {100, 0, 0, 0};
-
   Player(float _health) {
-    super(0, 0, ENEMY_TYPE_MELEE);
+    super(0, 0, _health);
     image = loadImage("player.png");
     maxHealth = _health;
     health = maxHealth;
@@ -30,20 +27,23 @@ class Player extends Entity {
     update();
     changeX = 0;
     changeY = 0;
-    if (mGridX - x > 0) {
+
+    if (mGridX > x) {
       changeX = int(!collision.right);
-    } else if (mGridX - x < 0) {
+    } else if (mGridX < x) {
       changeX = -int(!collision.left);
     }
-
-    if (mGridY - y > 0) {
+    if (mGridY > y) {
       changeY = int(!collision.below);
-    } else if (mGridY - y < 0) {
+    } else if (mGridY < y) {
       changeY = -int(!collision.above);
     }
-    
-    x += changeX;
-    y += changeY;
+    currentRoom.grid[x][y].leave();
+    if (!currentRoom.grid[x + changeX][y + changeY].occupied) {
+      x += changeX;
+      y += changeY;
+    }
+    currentRoom.grid[x][y].occupy();
     update();
   }
 
@@ -51,12 +51,12 @@ class Player extends Entity {
     currentRoom = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY];
     collision.update(currentRoom, x, y);
   }
-
-
+  
   void render() {
     if (transferCooldown > 0) {
       transferCooldown--;
     }
+    
     tint(255, 255, 255);
     image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
     noTint();
@@ -73,9 +73,7 @@ class Player extends Entity {
     gui.transition.startRender();
     update();
   }
-
-
-
+  
   void pickup(Item item) {
     switch(item.damage_type) {
     case DAMAGE_TOXIN:

@@ -18,8 +18,10 @@ class GUI {
 
   void render() {
     minimap.render();
-    // REMOVE AFTER DEBUG damage_stats.render();
-    // REMOVE AFTER DEBUG drawPlayerHealth();
+    // REMOVE AFTER DEBUG 
+    damage_stats.render();
+    // REMOVE AFTER DEBUG 
+    drawPlayerHealth();
   }
 
   void drawPlayerHealth() {
