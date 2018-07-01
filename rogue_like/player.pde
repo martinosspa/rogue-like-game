@@ -13,14 +13,12 @@ class Player extends Entity {
   float[] damage_distribution = {100, 0, 0, 0};
   Player(float _health) {
     super(0, 0, _health);
-    image = loadImage("player.png");
+    image = entity_images[0];
     maxHealth = _health;
     health = maxHealth;
     collision = new Collision();
     transferCooldownMax = frames;
     transferCooldown = 0;
-
-    update();
   }
 
   void move(int mGridX, int mGridY) {

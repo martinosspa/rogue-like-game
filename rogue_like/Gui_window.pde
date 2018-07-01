@@ -6,24 +6,23 @@ class Gui_window {
   float _height;
   color _color;
 
-  Gui_window(float tempX, float tempY, float tempWidth, float tempHeight, String tempText, color tempColor) {
+  Gui_window(float tempX, float tempY, float tempWidth, float tempHeight, color tempColor) {
     x = tempX;
     y = tempY;
     _width = tempWidth;
     _height = tempHeight;
-    text = tempText;
     _color = tempColor;
   }
 
 
   void render() {
-    stroke(gui._color);
+    stroke(gui.border_color);
     fill(_color);
     rect(x, y, _width, _height);
     fill(0);
     //textSize(_height/10);
     textAlign(LEFT, TOP);
-    text(text, x, y);
+    //text(text, x, y);
   }
   void updateText(String tempText) {
     text = tempText;

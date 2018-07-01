@@ -28,6 +28,7 @@ int mouseGridY = 0;
 
 PImage[] weapon_images = new PImage[10];
 PImage[] tile_images = new PImage[4];
+PImage[] entity_images = new PImage[4];
 
 int frames = 60;
 int currentLevelID = 0;
@@ -60,16 +61,19 @@ void setup() {
   tile_images[1] = loadImage("rock.png");
   tile_images[2] = loadImage("door.png");
   tile_images[3] = loadImage("wall.png");
+  entity_images[0] = loadImage("player.png");
 
   gridSizeX = width/roomRatioX;
   gridSizeY = height/roomRatioY;
+  
+  p = new Player(100);
 
   levels = new ArrayList<Level>();
   levels.add(new Level());
 
   currentLevel = levels.get(currentLevelID);
 
-  p = new Player(100);
+  p.update();
   p.x = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].startingX;
   p.y = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].startingY;
   gui = new GUI();

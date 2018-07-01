@@ -2,7 +2,10 @@ void drawAll() {
   background(0);
   switch(state) {
   case 0: //menu
-
+    fill(225, 0, 0);
+    textSize(gridSizeX);
+    text("GAME OVER", width/2, height/2);
+    textSize(width/gridSizeX);
     break;
   case 1: //reset / loading
 
@@ -18,10 +21,6 @@ void drawAll() {
         gui.transition.update();
       }
     } else {
-      fill(225, 0, 0);
-      textSize(gridSizeX);
-      text("GAME OVER", width/2, height/2);
-      textSize(12);
       state = 0;
     }
     break;

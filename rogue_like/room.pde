@@ -19,6 +19,7 @@ class Room {
   int enemyCurrentCount = 0;
 
   ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+  ArrayList<hp_blob> hp_blobs = new ArrayList<hp_blob>();
   ArrayList<Item> items;
   Tile[][] grid;
 
@@ -27,7 +28,7 @@ class Room {
     type = tempType;
     x = int(tempX);
     y = int(tempY);
-
+    
     _width = json.getJSONObject("dimensions").getInt("width");
     _height = json.getJSONObject("dimensions").getInt("height");
     grid = new Tile[_width][_height];
@@ -81,6 +82,10 @@ class Room {
     for (Enemy enemy : enemies) {
       enemy.render();
     }
+
+    for (hp_blob blob : hp_blobs) {
+      blob.render();
+    }
   }
 
 
@@ -107,5 +112,9 @@ class Room {
 
   void spawnEnemy(int enemyX, int enemyY) {
     enemies.add(new Enemy(enemyX, enemyY, 100 * parent_level.difficulty, ENEMY_TYPE_MELEE, this));
+  }
+  
+  void addHealthOrb(float health_amount, int orbX, int orbY) {
+    hp_blobs.add(new hp_blob(health_amount, orbX, orbY));
   }
 }
