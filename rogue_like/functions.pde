@@ -4,11 +4,12 @@ void drawAll() {
   case 0: //menu
     fill(225, 0, 0);
     textSize(gridSizeX);
+    textAlign(CENTER);
     text("GAME OVER", width/2, height/2);
     textSize(width/gridSizeX);
     break;
   case 1: //reset / loading
-
+      
     break;
   case 2: //playing
     if (!p.dead) {

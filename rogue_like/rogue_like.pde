@@ -34,24 +34,24 @@ int frames = 60;
 int currentLevelID = 0;
 ArrayList<Level> levels;
 
-boolean debug_mode = true;
-
+boolean debug_mode = false;
+float debug_seed = 1;
 int state = 2;
 
 /*
  state = 0; menu
  state = 1; reset/loading game
  state = 2; playing
- */
+*/
 
 
 RoomSender room_sender;
 Level currentLevel;
 Player p;
 GUI gui;
-
 void setup() {
-  size(800, 600, P2D);
+  size(800, 600, P3D);
+  //pre loading stuff
   room_sender = new RoomSender();
   frameRate(frames);
   weapon_images[0] = loadImage("toxin weapon.png");
@@ -62,21 +62,23 @@ void setup() {
   tile_images[2] = loadImage("door.png");
   tile_images[3] = loadImage("wall.png");
   entity_images[0] = loadImage("player.png");
-
   gridSizeX = width/roomRatioX;
   gridSizeY = height/roomRatioY;
-  
   p = new Player(100);
-
   levels = new ArrayList<Level>();
-  levels.add(new Level());
-
-  currentLevel = levels.get(currentLevelID);
-
-  p.update();
-  p.x = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].startingX;
-  p.y = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].startingY;
+  
+  //generate level and player
+  if (debug_mode) {
+    levels.add(new Level(debug_seed));
+  } else {
+    int r = int(random(10.0) * 1e10);
+    println("seed: " + r);
+    levels.add(new Level(r));
+  }
   gui = new GUI();
+  currentLevel = levels.get(currentLevelID);
+  p.enterRoom(currentLevel.currentRoomX,currentLevel.currentRoomY);
+  
 }
 
 void draw() {
@@ -84,7 +86,7 @@ void draw() {
   gridSizeY = height/roomRatioY;
   mouseGridX = (mouseX - (mouseX%gridSizeX)) / gridSizeX;
   mouseGridY = (mouseY - (mouseY%gridSizeY)) / gridSizeY;
-
+  //println(currentLevel.currentRoomX, currentLevel.currentRoomY);
   if (mousePressed) {
     if (!gui.transition.drawing) {
       p.move(mouseGridX, mouseGridY);
@@ -92,8 +94,9 @@ void draw() {
   }
 
   drawAll();
-
-  //p.health = constrain(p.health - 1, 0, p.maxHealth);
   fill(255, 0, 0);
-  text(int(frameRate) + "FPS", width-gridSizeX, 12);
+  textSize(12);
+  textAlign(RIGHT);
+  text(int(frameRate) + "FPS", width, 12);
+  textAlign(LEFT);
 }

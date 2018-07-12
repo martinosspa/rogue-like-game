@@ -49,30 +49,20 @@ class Player extends Entity {
     currentRoom = currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY];
     collision.update(currentRoom, x, y);
   }
-  
+
   void render() {
     if (transferCooldown > 0) {
       transferCooldown--;
     }
-    
+
     tint(255, 255, 255);
     image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
     noTint();
   }
 
-  void transfer(int newRoomX, int newRoomY) {
-    currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].discovered = true;
-    currentLevel.currentRoomX = newRoomX;
-    currentLevel.currentRoomY = newRoomY;
-    transferCooldown = transferCooldownMax;
-    currentLevel.rooms[newRoomX][newRoomY].enter();
-    x = currentLevel.rooms[newRoomX][newRoomY].startingX;
-    y = currentLevel.rooms[newRoomX][newRoomY].startingY;
-    gui.transition.startRender();
-    update();
-  }
-  
-  void pickup(Item item) {
+
+
+  void pickupItem(Item item) {
     switch(item.damage_type) {
     case DAMAGE_TOXIN:
       damage_distribution[1] += item.damage_amount;
@@ -87,5 +77,22 @@ class Player extends Entity {
     for (int i = 0; i < damage_distribution.length; i++) {
       println(damage_distribution[i]);
     }
+  }
+
+  void pickupHealthOrb(hp_blob blob) {
+    health = constrain(health + blob.health, 0, maxHealth);
+  }
+  void enterRoom(int roomX, int roomY) {
+    Room room = currentLevel.rooms[roomX][roomY];
+    x = room.startingX;
+    y = room.startingY;
+    currentLevel.currentRoomX = room.x;
+    currentLevel.currentRoomY = room.y;
+    room.discover();
+    currentLevel.rooms[room.x][room.y].enter();
+
+    transferCooldown = transferCooldownMax;
+    gui.transition.startRender();
+    update();
   }
 }

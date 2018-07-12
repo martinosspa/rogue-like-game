@@ -28,7 +28,7 @@ class Room {
     type = tempType;
     x = int(tempX);
     y = int(tempY);
-    
+
     _width = json.getJSONObject("dimensions").getInt("width");
     _height = json.getJSONObject("dimensions").getInt("height");
     grid = new Tile[_width][_height];
@@ -74,17 +74,22 @@ class Room {
       Item item = items.get(i);
       item.render();
       if (item.intersectsPlayer()) {
-        p.pickup(item);
+        p.pickupItem(item);
         items.remove(item);
+      }
+    }
+    for (int i = hp_blobs.size() - 1; i >= 0; i--) {
+      hp_blob blob = hp_blobs.get(i);
+      blob.render();
+      if (blob.intersectsPlayer() && blob.health + p.health <= p.maxHealth) {
+        p.pickupHealthOrb(blob);
+        println("picked up hp orb that restored " + blob.health + " health amount");
+        hp_blobs.remove(blob);
       }
     }
 
     for (Enemy enemy : enemies) {
       enemy.render();
-    }
-
-    for (hp_blob blob : hp_blobs) {
-      blob.render();
     }
   }
 
@@ -113,7 +118,7 @@ class Room {
   void spawnEnemy(int enemyX, int enemyY) {
     enemies.add(new Enemy(enemyX, enemyY, 100 * parent_level.difficulty, ENEMY_TYPE_MELEE, this));
   }
-  
+
   void addHealthOrb(float health_amount, int orbX, int orbY) {
     hp_blobs.add(new hp_blob(health_amount, orbX, orbY));
   }

@@ -44,14 +44,14 @@ class Enemy extends Entity {
       parentRoom.grid[x][y].occupied = true;
     }
     if (inRange) {
-      attack(p);
+      attackPlayer();
       fill(0, 255, 0);
     } else {
       wonderAround();
       fill(255, 0, 0);
     }
     handleAttackCooldown();
-      ellipseMode(CORNER);
+    ellipseMode(CORNER);
     noStroke();
     ellipse(x * gridSizeX, y * gridSizeY, gridSizeX, gridSizeY);
     drawHPBar(x, y, health, maxHealth);
@@ -83,10 +83,10 @@ class Enemy extends Entity {
     }
   }
 
-  private void attack(Entity ent) {
+  private void attackPlayer() {
     if (attackCooldown == 0) {
-      ent.takeDamage(attackDamage);
-      println("attacked : " + ent.health);
+      p.takeDamage(attackDamage);
+      println(p.health);
       attackCooldown = maxAttackCooldown;
     }
   }
@@ -105,10 +105,10 @@ class Enemy extends Entity {
     } else if (newY < y) {
       changeY = -int(!collision.above);
     }
-    parentRoom.grid[x][y].occupy();
+    
     x += changeX;
     y += changeY;
-
+    parentRoom.grid[x][y].occupy();
     update();
   }
 }
