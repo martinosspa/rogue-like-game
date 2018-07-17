@@ -31,7 +31,7 @@ class Level {
 
     PVector startingPos = new PVector(_width/2, _height/2);
     rooms[startX][startY] = new Room(loadJSONObject("room8.json"), this, startingPos.x, startingPos.y, ROOM_NORMAL);
-    rooms[startX][startY].discovered = true;
+    rooms[startX][startY].discover();
     taken_positions.add(startingPos);
 
     boolean stuck = false;
@@ -88,6 +88,7 @@ class Level {
           for (int j = 1; j < 10; j++) {
             rooms[intX][intY].addHealthOrb(p.maxHealth/j, floor(random(1, rooms[intX][intY]._width - 1)), floor(random(1, rooms[intX][intY]._height - 1)));
           }
+        } else {
         }
         rooms[intX][intY].enter();
       }

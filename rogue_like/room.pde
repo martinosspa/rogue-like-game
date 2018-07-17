@@ -22,9 +22,15 @@ class Room {
   ArrayList<hp_blob> hp_blobs = new ArrayList<hp_blob>();
   ArrayList<Item> items;
   Tile[][] grid;
+  Room(Level tempParentLevel, float tempX, float tempY) {
+    // empty debug room constructor
+    
+    
+  }
 
 
   Room(JSONObject json, Level tempParentLevel, float tempX, float tempY, int tempType) {
+    // normal room constructor
     type = tempType;
     x = int(tempX);
     y = int(tempY);
@@ -57,9 +63,6 @@ class Room {
 
     if (type == ROOM_LOOT) {
       items.add(new Item(_width/2, _height/2, parent_level.difficulty));
-    }
-
-    if (spawnEnemies) {
     }
   }
 

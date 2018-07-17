@@ -5,7 +5,7 @@
  >actual rooms
  >slime spits and loses hp based on attack
  */
-
+final int ROOM_EMPTY = -2;
 final int ROOM_DEBUG = -1;
 final int ROOM_NORMAL = 0;
 final int ROOM_LOOT = 1;
