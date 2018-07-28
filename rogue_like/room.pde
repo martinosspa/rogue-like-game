@@ -24,8 +24,6 @@ class Room {
   Tile[][] grid;
   Room(Level tempParentLevel, float tempX, float tempY) {
     // empty debug room constructor
-    
-    
   }
 
 
@@ -51,6 +49,7 @@ class Room {
      }
      
      */
+
     parent_level = tempParentLevel;
 
 
@@ -81,6 +80,9 @@ class Room {
         items.remove(item);
       }
     }
+    
+    
+    
     for (int i = hp_blobs.size() - 1; i >= 0; i--) {
       hp_blob blob = hp_blobs.get(i);
       blob.render();
@@ -110,8 +112,9 @@ class Room {
   }
 
   void enter() {
+    discover();
     hasEntered = true;
-    discovered = true;
+    
   }
 
   void discover() {

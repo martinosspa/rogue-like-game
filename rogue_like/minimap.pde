@@ -15,6 +15,8 @@ class Map {
         if (room == null || !room.discovered) {
           fill(255, 255, 255, alpha);
         } else if (currentLevel.rooms[currentLevel.currentRoomX][currentLevel.currentRoomY].equals(room)) {
+          fill(0, 255, 0, alpha);
+        } else if (currentLevel.rooms[i][j].type == ROOM_BOSS) {
           fill(255, 0, 0, alpha);
         } else if (currentLevel.rooms[i][j].discovered && !currentLevel.rooms[i][j].hasEntered) {
           fill(150, 150, 150, alpha);

@@ -1,6 +1,6 @@
 class Level { 
   float seed;
-  float difficulty = 1;
+  float difficulty = 10;
   float id;
   int _width;
   int _height;
@@ -64,23 +64,19 @@ class Level {
       PVector left_vector = new PVector(positions.x-1, positions.y);
       PVector down_vector = new PVector(positions.x, positions.y-1);
       PVector up_vector = new PVector(positions.x, positions.y+1);
-      sides[0] = false;
-      sides[1] = false;
-      sides[2] = false;
-      sides[3] = false;
-      if (taken_positions.contains(right_vector)) {
-        sides[0] = true;
+      sides[0] = taken_positions.contains(right_vector);
+      sides[1] = taken_positions.contains(up_vector);
+      sides[2] = taken_positions.contains(left_vector);
+      sides[3] = taken_positions.contains(down_vector);
+      
+      
+      if (positions == taken_positions.get(taken_positions.size()-1)) {
+        rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, ROOM_BOSS);
+      } else {
+        rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, rooms[intX][intY].type);
       }
-      if (taken_positions.contains(left_vector)) {
-        sides[2] = true;
-      }
-      if (taken_positions.contains(up_vector)) {
-        sides[1] = true;
-      }
-      if (taken_positions.contains(down_vector)) {
-        sides[3] = true;
-      }
-      rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, rooms[intX][intY].type);
+
+
       if (intX == int(taken_positions.get(0).x) && intY == int(taken_positions.get(0).y)) {
         if (debug_mode) {
           rooms[intX][intY] = new Room(loadJSONObject("debug_room.json"), this, positions.x, positions.y, ROOM_DEBUG);
@@ -88,8 +84,9 @@ class Level {
           for (int j = 1; j < 10; j++) {
             rooms[intX][intY].addHealthOrb(p.maxHealth/j, floor(random(1, rooms[intX][intY]._width - 1)), floor(random(1, rooms[intX][intY]._height - 1)));
           }
-        } else {
         }
+
+
         rooms[intX][intY].enter();
       }
     }

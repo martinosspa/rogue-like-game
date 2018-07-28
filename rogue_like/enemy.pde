@@ -11,6 +11,7 @@ class Enemy extends Entity {
   boolean inRange = false;
   int type = ENEMY_TYPE_MELEE;
   int visionRange = 0;
+  PImage image;
 
   Enemy(int xx, int yy, float _health, int temp_type, Room tempParentRoom) {
     super(xx, yy, _health);
@@ -18,6 +19,7 @@ class Enemy extends Entity {
     health = maxHealth;
     maxAttackCooldown = frames;
     attackCooldown = 0;
+    image = entity_images[1];
     collision = new Collision();
     x = 10;
     y = 5;
@@ -45,16 +47,15 @@ class Enemy extends Entity {
     }
     if (inRange) {
       attackPlayer();
-      fill(0, 255, 0);
     } else {
       wonderAround();
-      fill(255, 0, 0);
     }
+    image(image, x * gridSizeX, (y - 0.5) * gridSizeY, gridSizeX-1, gridSizeY * 1.2);
     handleAttackCooldown();
-    ellipseMode(CORNER);
-    noStroke();
-    ellipse(x * gridSizeX, y * gridSizeY, gridSizeX, gridSizeY);
-    drawHPBar(x, y, health, maxHealth);
+    //ellipseMode(CORNER);
+    //noStroke();
+    //ellipse(x * gridSizeX, y * gridSizeY, gridSizeX, gridSizeY);
+    drawHPBar(x, y - gridSizeY/2, health, maxHealth);
   }
   private void handleAttackCooldown() {
     if (attackCooldown > 0) {

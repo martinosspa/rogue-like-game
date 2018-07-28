@@ -55,9 +55,9 @@ class Player extends Entity {
       transferCooldown--;
     }
 
-    tint(255, 255, 255);
+    //tint(255, 255, 255);
     image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
-    noTint();
+    //noTint();
   }
 
 

@@ -9,6 +9,7 @@ final int ROOM_EMPTY = -2;
 final int ROOM_DEBUG = -1;
 final int ROOM_NORMAL = 0;
 final int ROOM_LOOT = 1;
+final int ROOM_BOSS = 2;
 
 final int ENEMY_TYPE_MELEE = 0;
 final int ENEMY_TYPE_RANGED = 1;
@@ -57,11 +58,13 @@ void setup() {
   weapon_images[0] = loadImage("toxin weapon.png");
   weapon_images[1] = loadImage("toxin weapon.png");
   weapon_images[2] = loadImage("toxin weapon.png");
-  tile_images[0] = loadImage("ground1.png");
+  //tile_images[0] = loadImage("ground1.png");
+  tile_images[0] = loadImage("background.png");
   tile_images[1] = loadImage("rock.png");
   tile_images[2] = loadImage("door.png");
   tile_images[3] = loadImage("wall.png");
-  entity_images[0] = loadImage("player.png");
+  entity_images[0] = loadImage("slime.png");
+  entity_images[1] = loadImage("enemy.png");
   gridSizeX = width/roomRatioX;
   gridSizeY = height/roomRatioY;
   p = new Player(100);
