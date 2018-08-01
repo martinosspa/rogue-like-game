@@ -1,5 +1,8 @@
 import json
 import random
+available_tiles = ['empty_tile', 'rock', 'door', 'wall_tile']
+tile_weights = [0.99, 0.01, 0, 0]
+room_count = 100
 
 def randomTF():
 	return random.random() > 0.5
@@ -7,66 +10,62 @@ def randomTF():
 def get_random_tile(tiles, tile_weights):
     return random.choices(tiles, weights=tile_weights)[0]
 
-def generate_room():
-	available_tiles = ['empty_tile', 'rock', 'transfer_tile', 'void_tile']
-	tile_weights = [0.99, 0.01, 0, 0]
-	width = 20
-	height = 15
-	diversity_score = 0
-	room = {}
-	room['grid'] = {}
-	room['dimensions'] = {'width':width, 'height':height}
-	room['starting_positions'] = {"x":1, "y":1}
-	room['connections'] = {
-		'left': False,
-		'right': False,
-		'up': False,
-		'down': False
-	}
-	generate_coords = (random.randint(1, width-1), random.randint(1, height-1))
+class Room:
+	def __init__(self, width, height):
+		self.width = width
+		self.height = height
+		self.diversity_score = 0
+		self.room_dictionary = {}
+		self.room_dictionary['grid'] = {}
+		self.room_dictionary['dimensions'] = {'width':self.width, 'height':self.height}
+		self.room_dictionary['starting_positions'] = {"x":1, "y":1}
+		self.room_dictionary['connections'] = {
+			'left': False,
+			'right': False,
+			'up': False,
+			'down': False
+			}
+		self.room_dictionary['connections']['left'] = randomTF()
+		self.room_dictionary['connections']['right'] = randomTF()
+		self.room_dictionary['connections']['up'] = randomTF()
+		self.room_dictionary['connections']['down'] = randomTF()
 
-	room['connections']['left'] = randomTF()
-	room['connections']['right'] = randomTF()
-	room['connections']['up'] = randomTF()
-	room['connections']['down'] = randomTF()
+	def initiate_empty(self):
+		for i in range(self.width):
+			self.row = {}
+			for j in range(self.height):
+				self.tile = {}
+				if i == 0 or i == self.width - 1 or j == 0 or j == self.height - 1:
+					self.tile['name'] = 'wall_tile'
+				else:
+					self.tile['name'] = 'empty_tile'
+					#self.tile['name'] = get_random_tile(available_tiles, tile_weights)
+					#self.diversity_score = self.diversity_score + 5 if tile['name'] == 'rock' else self.diversity_score
 
-	# initiate room with empty tiles
-	for i in range(width):
-		row = {}
-		for j in range(height):
-			tile = {}
-			if i == 0 or i == width - 1 or j == 0 or j == height - 1:
-				tile['name'] = 'void_tile'
+				self.row[str(j)] = self.tile
+			self.room_dictionary['grid'][str(i)] = self.row
 
-			else:
-				tile['name'] = get_random_tile(available_tiles, tile_weights)
-				diversity_score = diversity_score + 5 if tile['name'] == 'rock' else diversity_score
-			row[str(j)] = tile
-		room['grid'][str(i)] = row
+	def extend_from_tile(self):
+		self.generate_coords = (random.randint(1, self.width-1), random.randint(1, self.height-1))
+		self.extendRight = randomTF()
+		self.extendUp = randomTF()
+		self.generate_x_start = self.generate_coords[0] if self.extendRight else 0
+		self.generate_x_stop = self.width-1 if self.extendRight else self.generate_coords[0]
+		self.generate_y_start = self.generate_coords[1] if self.extendUp else 0
+		self.generate_y_stop = self.height-1 if self.extendUp else self.generate_coords[1]
 
-
-	if generate_coords:
-		extendRight = randomTF()
-		extendUp = randomTF()
-		generate_x_start = generate_coords[0] if extendRight else 0
-		generate_x_stop = width-1 if extendRight else generate_coords[0]
-		generate_y_start = generate_coords[1] if extendUp else 0
-		generate_y_stop = height-1 if extendUp else generate_coords[1]
-
-		for i in range(generate_x_start, generate_x_stop):
-			for j in range(generate_y_start, generate_y_stop):
-				if room['grid'][str(i)][str(j)]['name'] == 'empty_tile':
-					room['grid'][str(i)][str(j)]['name'] = 'void_tile'
-					diversity_score += 1
-	#room['diversity_score'] = diversity_score
-
-	with open('rooms/python_created_room_d{}.json'.format(diversity_score), 'w') as f:
-	    json.dump(room, f)
-
+		for i in range(self.generate_x_start, self.generate_x_stop):
+			for j in range(self.generate_y_start, self.generate_y_stop):
+				if self.room_dictionary['grid'][str(i)][str(j)]['name'] == 'empty_tile':
+					self.room_dictionary['grid'][str(i)][str(j)]['name'] = 'wall_tile'
+					self.diversity_score += 1
+	def save_json(self, file_name):
+		with open('rooms/{}'.format(file_name), 'w') as file:
+			json.dump(self.room_dictionary, file)
 
 if __name__ == "__main__":
-	room_count = 1000
-	for _ in range(room_count):
-		room_count = generate_room()
-	print(room_count)
-	print("{} rooms created".format(room_count))
+	for i in range(room_count):
+		r = Room(20, 15)
+		r.initiate_empty()
+		#r.extend_from_tile()
+		r.save_json('room_{}_d{}.json'.format(i, r.diversity_score))
