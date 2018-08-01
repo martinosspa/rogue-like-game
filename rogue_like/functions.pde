@@ -42,9 +42,9 @@ Tile getTile(int x, int y, String tile, String id) {
     return new EmptyTile(x, y);
   case "rock":
     return new Rock(x, y);
-  case "transfer_tile":
+  case "door":
     return new Door(x, y, id);
-  case "void_tile":
+  case "wall_tile":
     return new WallTile(x, y);
   default:
     return null;

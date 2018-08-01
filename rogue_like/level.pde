@@ -79,11 +79,13 @@ class Level {
 
       if (intX == int(taken_positions.get(0).x) && intY == int(taken_positions.get(0).y)) {
         if (debug_mode) {
-          rooms[intX][intY] = new Room(loadJSONObject("debug_room.json"), this, positions.x, positions.y, ROOM_DEBUG);
+          rooms[intX][intY] = new Room(loadJSONObject("python_created_rooms/python_created_room_d246.json"), this, positions.x, positions.y, ROOM_DEBUG);
+          /*
           rooms[intX][intY].spawnEnemy(5, 5);
           for (int j = 1; j < 10; j++) {
             rooms[intX][intY].addHealthOrb(p.maxHealth/j, floor(random(1, rooms[intX][intY]._width - 1)), floor(random(1, rooms[intX][intY]._height - 1)));
           }
+          */
         }
 
 

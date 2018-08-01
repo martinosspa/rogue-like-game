@@ -1,18 +1,10 @@
-class WallTile extends Tile {
+class VoidTile extends Tile {
 
-  PImage image;
-  PImage image_background;
-
-  WallTile(int tempX, int tempY) {
+  VoidTile(int tempX, int tempY) {
     super(tempX, tempY);
-    occupied = true;
-    image = tile_images[3];
-    image_background = tile_images[1];
   }
-
-
   void render() {
-    image(image_background, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
-    image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
+    fill(255);
+    rect(x * gridSizeX, y * gridSizeY, gridSizeX - 1, gridSizeY - 1);
   }
 }
