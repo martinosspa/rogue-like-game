@@ -17,6 +17,6 @@ class GUI {
 
 
   void render() {
-    minimap.render();
+    //minimap.render();
   }
 }

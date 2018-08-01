@@ -56,7 +56,7 @@ class Room {
     items = new ArrayList<Item>();
     for (int i = 0; i < _width; i++) {
       for (int j = 0; j < _height; j++) {
-        grid[i][j] = getTile(i, j, json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("name"), json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("transfer_id"));
+          grid[i][j] = getTile(i, j, json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("name"), json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("transfer_id"));
       }
     }
 
