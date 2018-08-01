@@ -28,11 +28,14 @@ class Room:
 			'down': False
 			}
 		self.middle_coords = (self.width/2 if self.width % 2 == 0 else (self.width-1)/2, self.height/2 if self.height % 2 == 0 else (self.height-1)/2)
-		print('middle coords: {}'.format(self.middle_coords))
-		self.room_dictionary['connections']['left'] = randomTF()
-		self.room_dictionary['connections']['right'] = randomTF()
-		self.room_dictionary['connections']['up'] = randomTF()
-		self.room_dictionary['connections']['down'] = randomTF()
+		self.odd_in_x = not self.width % 2 == 0
+		self.odd_in_y = not self.height % 2 == 0
+		
+		#self.room_dictionary['connections']['left'] = randomTF()
+		#self.room_dictionary['connections']['right'] = randomTF()
+		#self.room_dictionary['connections']['up'] = randomTF()
+		#self.room_dictionary['connections']['down'] = randomTF()
+
 
 	def initiate_empty(self):
 		for i in range(self.width):
@@ -43,37 +46,41 @@ class Room:
 					self.tile['name'] = 'wall_tile'
 				else:
 					self.tile['name'] = 'empty_tile'
-					#self.tile['name'] = get_random_tile(available_tiles, tile_weights)
 					#self.diversity_score = self.diversity_score + 5 if tile['name'] == 'rock' else self.diversity_score
 
 				self.row[str(j)] = self.tile
 			self.room_dictionary['grid'][str(i)] = self.row
 
 	def generate_symmetry(self):
-		self.side_width = int(self.middle_coords[0]) 
-		self.side_height = int(self.middle_coords[1])
+		self.side_width = int(self.middle_coords[0]) - 1
+		self.side_height = int(self.middle_coords[1]) - 1
+		
 		#generate normal side
 		self.side = []
 		for i in range(self.side_width):
 			self.row = []
 			for j in range(self.side_height):
-
 				self.row.append(get_random_tile(available_tiles, [5, 2, 0, 3]))
-				#self.room_dictionary['grid'][str(i)][str(j)]['name'] = get_random_tile(available_tiles, [1/3, 1/3, 0, 1/3])
 			self.side.append(self.row)
-
+		
 		#flip side
 		self.a = np.fliplr(self.side)
 		self.b = np.flipud(self.side)
 		self.c = np.fliplr(self.b)
 
-		for i in range(1, self.side_width):
-			for j in range(1, self.side_height):
-				self.room_dictionary['grid'][str(i)][str(j)]['name'] = self.side[i][j]
-				self.room_dictionary['grid'][str(i + self.side_width - 1)][str(j)]['name'] = self.b[i][j]
-				self.room_dictionary['grid'][str(i)][str(j + self.side_height - 1)]['name'] = self.a[i][j]
-				self.room_dictionary['grid'][str(i + self.side_width -  1)][str(j + self.side_height - 1)]['name'] = self.c[i][j]
+		for i in range(1, int(self.middle_coords[0])):
+			for j in range(1, int(self.middle_coords[1])):
+				self.changeX = int(self.odd_in_x)
+				self.changeY = int(self.odd_in_y)
+				self.room_dictionary['grid'][str(i)][str(j)]['name'] = self.side[i-1][j-1] #up left
+				self.room_dictionary['grid'][str(i + self.side_width + self.changeX)][str(j)]['name'] = self.b[i-1][j-1] #up right
+				self.room_dictionary['grid'][str(i)][str(j + self.side_height + self.changeY)]['name'] = self.a[i-1][j-1] #down left
+				self.room_dictionary['grid'][str(i + self.side_width + self.changeX)][str(j + self.side_height + self.changeY)]['name'] = self.c[i-1][j-1] #down right
 
+	def solvable(self):
+		for connection in self.room_dictionary['connections']:
+			pass
+			#print(self.room_dictionary['connections'][connection])
 
 
 
@@ -92,14 +99,16 @@ class Room:
 					self.room_dictionary['grid'][str(i)][str(j)]['name'] = 'wall_tile'
 					self.diversity_score += 1
 
+
 	def save_json(self, file_name):
 		with open('rooms/{}'.format(file_name), 'w') as file:
 			json.dump(self.room_dictionary, file)
 
 if __name__ == "__main__":
 	for i in range(1):
-		r = Room(20, 14)
+		r = Room(20, 15)
 		r.initiate_empty()
 		#r.generate_from_random_tile()
-		r.generate_symmetry()
-		r.save_json('room_{}_d{}.json'.format(i, r.diversity_score))
+		#r.generate_symmetry()
+		#r.solvable()
+		#r.save_json('room_{}_d{}.json'.format(i, r.diversity_score))
