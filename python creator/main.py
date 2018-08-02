@@ -27,7 +27,7 @@ class Room:
 			'up': False,
 			'down': False
 			}
-		self.middle_coords = (self.width/2 if self.width % 2 == 0 else (self.width-1)/2, self.height/2 if self.height % 2 == 0 else (self.height-1)/2)
+		self.middle_coords = (int(self.width/2 if self.width % 2 == 0 else (self.width-1)/2), int(self.height/2 if self.height % 2 == 0 else (self.height-1)/2))
 		self.odd_in_x = not self.width % 2 == 0
 		self.odd_in_y = not self.height % 2 == 0
 		
@@ -35,7 +35,17 @@ class Room:
 		#self.room_dictionary['connections']['right'] = randomTF()
 		#self.room_dictionary['connections']['up'] = randomTF()
 		#self.room_dictionary['connections']['down'] = randomTF()
-
+	def get_adjusted_tiles(self, coords, empty=True):
+		self.tiles = []
+		if type(coords) == tuple:
+			for i in range(self.width):
+				for j in range(self.height):
+					if self.room_dictionary['grid'][str(i)][str(j)]['name'] == 'empty_tile':
+						if i in range(coords[0] - 1, coords[0] + 2):
+							if j in range(coords[1] - 1, coords[1] + 2):
+								self.tiles.append((i, j))
+		self.tiles.remove(coords)
+		return self.tiles
 
 	def initiate_empty(self):
 		for i in range(self.width):
@@ -52,8 +62,8 @@ class Room:
 			self.room_dictionary['grid'][str(i)] = self.row
 
 	def generate_symmetry(self):
-		self.side_width = int(self.middle_coords[0]) - 1
-		self.side_height = int(self.middle_coords[1]) - 1
+		self.side_width = self.middle_coords[0] - 1
+		self.side_height = self.middle_coords[1] - 1
 		
 		#generate normal side
 		self.side = []
@@ -78,8 +88,31 @@ class Room:
 				self.room_dictionary['grid'][str(i + self.side_width + self.changeX)][str(j + self.side_height + self.changeY)]['name'] = self.c[i-1][j-1] #down right
 
 	def solvable(self):
-		for connection in self.room_dictionary['connections']:
-			pass
+		#for connection in self.room_dictionary['connections']:
+		self.starting_pos = (3, self.middle_coords[1])
+		self.walkable_tiles = []
+		self.open_set = [self.starting_pos]
+		self.closed_set = []
+		self.best_dist = 0
+		self.target_location = self.middle_coords
+		for i in range(self.width):
+			for j in range(self.height):
+				self.name = self.room_dictionary['grid'][str(i)][str(j)]['name']
+				if self.name == 'empty_tile':
+					self.walkable_tiles.append((i, j))
+		while self.open_set:
+			for i in self.get_adjusted_tiles(self.open_set[0]):
+				if i not in self.open_set:
+					self.open_set.append(i)
+
+			self.closed_set.append(self.open_set[0])
+			self.open_set.pop(0)
+			if self.target_location in self.open_set:
+				print('closed', len(self.open_set))
+				print(self.closed_set)
+				break
+			#self.open_set.remove(self.starting_pos)
+		#print(self.walkable_tiles)
 			#print(self.room_dictionary['connections'][connection])
 
 
@@ -110,5 +143,5 @@ if __name__ == "__main__":
 		r.initiate_empty()
 		#r.generate_from_random_tile()
 		#r.generate_symmetry()
-		#r.solvable()
+		r.solvable()
 		#r.save_json('room_{}_d{}.json'.format(i, r.diversity_score))
