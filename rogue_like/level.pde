@@ -79,7 +79,7 @@ class Level {
 
       if (intX == int(taken_positions.get(0).x) && intY == int(taken_positions.get(0).y)) {
         if (debug_mode) {
-          rooms[intX][intY] = new Room(loadJSONObject("python_created_rooms/room_d172.json"), this, positions.x, positions.y, ROOM_DEBUG);
+          rooms[intX][intY] = new Room(loadJSONObject("python_created_rooms/room_d157.json"), this, positions.x, positions.y, ROOM_DEBUG);
           /*
           rooms[intX][intY].spawnEnemy(5, 5);
           for (int j = 1; j < 10; j++) {

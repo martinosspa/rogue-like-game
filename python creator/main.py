@@ -31,21 +31,38 @@ class Room:
 		self.odd_in_x = not self.width % 2 == 0
 		self.odd_in_y = not self.height % 2 == 0
 
+
+
+
+	def load_from_json(self, file_name):
+		with open('rooms/{}'.format(file_name)) as file:
+			self.json = json.loads(file.read())
+			self.room_dictionary['dimensions']['width'] = self.json['dimensions']['width']
+			self.room_dictionary['dimensions']['height'] = self.json['dimensions']['height']
+			for i in range(self.json['dimensions']['width']):
+				for j in range(self.json['dimensions']['height']):
+					self.room_dictionary['grid'][str(i)][str(j)]['name'] = self.json['grid'][str(i)][str(j)]['name']
+
+
+
+
+
 	def get_adjusted_tiles(self, coords):
 		self.tiles = []
 		if type(coords) == tuple:
-			print('coords: {}'.format(coords))
-			for i in range(self.width):
-				for j in range(self.height):
-					if self.room_dictionary['grid'][str(i)][str(j)]['name'] == 'empty_tile':
-						if (i == coords[0] - 1 or
-						   i == coords[0] + 1 or
-						   j == coords[1] - 1 or
-						   j == coords[1] + 1):
-							#print((i,j))
-							self.tiles.append((i, j))
+			#print('coords: {}'.format(coords))
 
-			#self.tiles.remove(coords)
+			if self.room_dictionary['grid'][str(coords[0])][str(coords[1])]['name'] == 'empty_tile':
+				self.tiles.append((coords[0] + 1, coords[1]))
+
+			if self.room_dictionary['grid'][str(coords[0]-1)][str(coords[1])]['name'] == 'empty_tile':
+				self.tiles.append((coords[0] - 1, coords[1]))
+
+			if self.room_dictionary['grid'][str(coords[0])][str(coords[1]+1)]['name'] == 'empty_tile':
+				self.tiles.append((coords[0], coords[1]+1))
+
+			if self.room_dictionary['grid'][str(coords[0])][str(coords[1]-1)]['name'] == 'empty_tile':
+				self.tiles.append((coords[0], coords[1]-1))
 
 		return self.tiles
 
@@ -62,10 +79,11 @@ class Room:
 
 				self.row[str(j)] = self.tile
 			self.room_dictionary['grid'][str(i)] = self.row
+			
 	def generate_random(self):
 		for i in range(1, self.width-1):
 			for j in range(1, self.height-1):
-				self.tile = get_random_tile(available_tiles, [15, 5, 0, 8])
+				self.tile = get_random_tile(available_tiles, [20, 6, 0, 6])
 				if self.tile == 'rock':
 					self.diversity_score += 1
 				elif self.tile == 'wall_tile':
@@ -103,25 +121,29 @@ class Room:
 	def solvable(self):
 		#for connection in self.room_dictionary['connections']:
 		self.starting_pos = (self.middle_coords[0], 1)
-		self.walkable_tiles = []
+		self.target_location = (self.middle_coords[0], self.height-2)
 		self.open_set = [self.starting_pos]
 		self.closed_set = []
-		self.best_dist = 0
-		self.target_location = (self.middle_coords[0], self.height-2)
-		self.current_path = []
-		#print(self.starting_pos, self.target_location)
-
+		self.walkable_tiles = []
+		for i in range(1, self.width-1):
+			for j in range(1, self.height-1):
+				if self.room_dictionary['grid'][str(i)][str(j)]['name'] == 'empty_tile':
+					self.walkable_tiles.append( (i, j) )
+		
 		while len(self.open_set) > 0:
-			self.top_position = len(self.open_set)-1
-			self.neighbors = self.get_adjusted_tiles(self.open_set[self.top_position])
-			for neighbor in self.neighbors:
-				if neighbor not in self.open_set and neighbor not in self.closed_set:
-					self.open_set.append(neighbor)
-			self.closed_set.append(self.open_set[self.top_position])
-			self.open_set.pop(self.top_position)
+			for tile in self.open_set:
+				self.neighbors = self.get_adjusted_tiles(tile)
+				if self.target_location in self.neighbors:
+					return True
+				else:
+					for neighbor in self.neighbors:
+						if neighbor not in self.open_set and neighbor not in self.closed_set and neighbor in self.walkable_tiles:
+							self.open_set.append(neighbor)
+					self.closed_set.append(tile)
+					self.open_set.remove(tile)
 			
-			if self.target_location in self.open_set or self.target_location in self.neighbors:
-				return True
+			
+			
 		return False
 
 	def generate_from_random_tile(self):
@@ -146,7 +168,7 @@ class Room:
 if __name__ == "__main__":
 	rooms = []
 	total_diversity = 0
-	room_count = 3
+	room_count = 100
 	print('Generating...')
 	for i in range(room_count):
 		r = Room(20, 15)
@@ -154,11 +176,14 @@ if __name__ == "__main__":
 		#r.generate_from_random_tile()
 		#r.generate_symmetry()
 		r.generate_random()
-		if r.solvable() and not r.room_dictionary in rooms:
-			total_diversity += r.diversity_score
+		if r.solvable():
 			rooms.append(r.room_dictionary)
 			r.save_json('room_d{}.json'.format(r.diversity_score))
+		'''
+		if r.solvable() and not r.room_dictionary in rooms:
+			total_diversity += r.diversity_score
+			
+			
+		''' 
 
 	print('{} rooms solvable from {}'.format(len(rooms), room_count))
-	average_diversity = total_diversity/len(rooms)
-	print('average_diversity: {}'.format(average_diversity))
