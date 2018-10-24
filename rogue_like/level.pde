@@ -69,12 +69,14 @@ class Level {
       sides[2] = taken_positions.contains(left_vector);
       sides[3] = taken_positions.contains(down_vector);
       
-      
+      rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, rooms[intX][intY].type);
+      /*
       if (positions == taken_positions.get(taken_positions.size()-1)) {
         rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, ROOM_BOSS);
       } else {
-        rooms[intX][intY] = new Room(room_sender.request(sides), this, positions.x, positions.y, rooms[intX][intY].type);
+        
       }
+      */
 
 
       if (intX == int(taken_positions.get(0).x) && intY == int(taken_positions.get(0).y)) {

@@ -4,6 +4,7 @@ class Door extends Tile {
   PImage background_image;
   Door(int tempX, int tempY, String _id) {
     super(tempX, tempY);
+    occupied = false;
     id = _id;
     background_image = tile_images[0];
     image = tile_images[2];
@@ -12,9 +13,7 @@ class Door extends Tile {
   void render() {
     image(background_image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
     image(image, x*gridSizeX, y*gridSizeY, gridSizeX, gridSizeY);
-    if (occupied) {
-      occupied = false;
-    } 
+
     if (p.x == x && p.y == y && p.transferCooldown == 0) {
       switch (id) {
       case "right": //transfer right

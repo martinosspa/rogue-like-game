@@ -46,6 +46,8 @@ Tile getTile(int x, int y, String tile, String id) {
     return new Door(x, y, id);
   case "wall_tile":
     return new WallTile(x, y);
+  case "void_tile":
+    return new WallTile(x, y);
   default:
     return null;
   }

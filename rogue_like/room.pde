@@ -56,7 +56,7 @@ class Room {
     items = new ArrayList<Item>();
     for (int i = 0; i < _width; i++) {
       for (int j = 0; j < _height; j++) {
-          grid[i][j] = getTile(i, j, json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("name"), json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("transfer_id"));
+        grid[i][j] = getTile(i, j, json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("name"), json.getJSONObject("grid").getJSONObject(str(i)).getJSONObject(str(j)).getString("transfer_id"));
       }
     }
 
@@ -67,9 +67,12 @@ class Room {
 
 
   void render() {
+
     for (int i = 0; i < _width; i++) {
       for (int j = 0; j < _height; j++) {
-        grid[i][j].render();
+        if (grid[i][j] != null) {
+          grid[i][j].render();
+        }
       }
     }
     for (int i = items.size() - 1; i >= 0; i--) {
@@ -80,9 +83,9 @@ class Room {
         items.remove(item);
       }
     }
-    
-    
-    
+
+
+
     for (int i = hp_blobs.size() - 1; i >= 0; i--) {
       hp_blob blob = hp_blobs.get(i);
       blob.render();
@@ -114,7 +117,6 @@ class Room {
   void enter() {
     discover();
     hasEntered = true;
-    
   }
 
   void discover() {

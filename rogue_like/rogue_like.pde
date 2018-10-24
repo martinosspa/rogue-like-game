@@ -35,7 +35,7 @@ int frames = 60;
 int currentLevelID = 0;
 ArrayList<Level> levels;
 
-boolean debug_mode = true;
+boolean debug_mode = false;
 float debug_seed = 1;
 int state = 2;
 

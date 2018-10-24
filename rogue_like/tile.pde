@@ -5,6 +5,7 @@ class Tile {
   Tile(int xx, int yy) {
     x = xx;
     y = yy;
+    println("created ", x , y);
   }
 
   void render() {
