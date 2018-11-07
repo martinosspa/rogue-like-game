@@ -4,7 +4,7 @@ class Door extends Tile {
   PImage background_image;
   Door(int tempX, int tempY, String _id) {
     super(tempX, tempY);
-    occupied = false;
+    occupied = true;
     id = _id;
     background_image = tile_images[0];
     image = tile_images[2];
