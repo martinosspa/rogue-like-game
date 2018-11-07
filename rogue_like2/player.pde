@@ -1,5 +1,6 @@
 class Player extends Entity {
   int changeX, changeY = 0;
+  int moveX, moveY = 0;
   Player() {
     x = 0;
     y = 0;
@@ -16,11 +17,10 @@ class Player extends Entity {
 
 
   void move(int newX, int newY) {
-    changeX = newX - x;
-    changeY = newY - y;
+    changeX = constrain(newX - x, -1, 1);
+    changeY = constrain(newY - y, -1, 1);
   }
   void tick() {
-    
     x += changeX;
     y += changeY;
     changeX = 0;
